@@ -1,0 +1,192 @@
+Private Cottage Rental Website Specification
+Site Structure and Pages
+
+Home: A welcoming landing page with a concise description of the cottage (emphasize it’s a private friends-and-family rental). Include a couple of highlight photos (perhaps a hero image), a brief overview of amenities/location (only general area, not exact address), and a clear call-to-action like an “Inquire to Book” button that leads to the Contact/Inquiry form. The navigation menu (at top or side) should link to all main sections below.
+
+Gallery: A dedicated photo gallery page showing the cottage and surroundings. Use a responsive image grid or slider/carousel. Ensure images are optimized for web and look good on all screen sizes. Optionally, enable a lightbox feature so users can click to enlarge photos.
+
+Availability: A page displaying a read-only availability calendar embedded from Google Calendar. This will show which dates are booked vs available (more details in the calendar section below). Include a note like “Calendar is updated; dates marked as busy/unavailable are already booked.” Do not list any renter names or details – just show availability.
+
+FAQ/Rules: A page outlining frequently asked questions and house rules. Include info such as check-in/check-out times, maximum occupancy, pet policy, what’s provided (linens, Wi-Fi, etc.), and any “house rules” (noise, parking, etc.). Also clarify that this is a private rental for friends/family (to set expectations that inquiries are limited to known guests).
+
+Contact/Inquiry: A contact page with an inquiry form and contact info. This page lets users (friends/family) submit a booking inquiry. Include a form (fields detailed below) and other contact methods if relevant (e.g. an email address or phone number for direct questions). You might also add a note reinforcing that booking is by inquiry (not instant) and that the exact address will be provided upon confirmed booking (for privacy).
+
+Navigation & Layout: Provide a simple, intuitive navigation bar to access these pages. The site should have a consistent header/footer on all pages (e.g. footer can restate the general location, a “friends and family only” note, and perhaps the Venmo payment link/QR if appropriate). Use clear page titles (Home, Gallery, Availability, FAQ/Rules, Contact). The design should be clean and straightforward to facilitate quick implementation.
+
+Responsive Design: Ensure the site is mobile-friendly and responsive on all screen sizes. Use a fluid layout or CSS media queries so that images and text resize or reflow on smaller screens. For example, the gallery can collapse from a multi-column grid on desktop to a single-column or slider on mobile. Navigation should be mobile-accessible (e.g. a hamburger menu). All text should be legible on small devices, and interactive elements (buttons, form fields) should be tap-friendly. Testing on both desktop and mobile browsers is recommended.
+
+Availability Calendar (Google Calendar Embed)
+
+Use Google Calendar to display availability in a read-only fashion. Yes, you will need to create a Google Calendar for the cottage if you haven’t already. We recommend creating a separate Google Calendar dedicated to this rental’s availability and updating it with events for booked dates. Key steps and best practices:
+
+Calendar Setup: Create a new Google Calendar (e.g. “Cottage Availability”) in your Google account. For each booking or blocked period, add an event spanning those dates. Mark those events as “Busy.” (You can label them “Booked” or keep them private – since we’ll hide details, the label isn’t visible publicly.)
+
+Sharing Settings: In Google Calendar’s settings for this calendar, under “Access permissions for events,” check “Make available to public” and select “See only free/busy (hide details)”
+elfsight.com
+support.google.com
+. This ensures that external viewers only see “Busy” blocks for booked dates, without any personal info or event details. (If the embed still shows details, double-check that each event’s visibility is set to private; public events might show titles even with free/busy setting
+support.google.com
+.)
+
+Embedding the Calendar: Use Google Calendar’s embed code to display the calendar on the Availability page. In the Google Calendar settings (“Integrate calendar”), grab the iframe embed snippet. It will look like: <iframe src="https://calendar.google.com/calendar/embed?src=<your_calendar_id>&..."></iframe>. Use a Month view by default so guests can see a broad view of dates. You might disable extraneous details in the embed URL parameters (e.g. hide calendar name, etc.) for a cleaner look.
+
+Responsive Embed: By default, Google’s embed code has fixed size. Make it responsive so it works on mobile. For example, wrap the iframe in a container <div> with CSS that forces the iframe to scale to width: 100%. You can specify a fluid width and a fixed aspect ratio or height. (For instance, one approach is setting the iframe width to 100% and a height of around 600px for desktop, and allowing scrolling on smaller screens.) There are also CSS tricks to make the iframe auto-resize
+codepen.io
+codepen.io
+. Ensuring the calendar iframe is not cut off on mobile will likely involve giving it a full-width layout and enabling scroll for the iframe on small screens if the whole month doesn’t fit.
+
+Calendar Functionality: The embedded calendar will show days as “Busy” or just blocked. Users should be able to toggle to different months or weeks using Google’s interface if needed. Since this is a single-property availability, a simple legend or note can clarify that “Highlighted/Busy dates are already booked; blank dates are available.” You do not need a complex booking engine – this calendar is purely informational.
+
+Ongoing Use: Update this Google Calendar whenever you book the cottage for someone. Those updates will automatically reflect on the site. (No database needed – the calendar is the source of truth.)
+
+Recommended Google Calendar settings: keep the timezone consistent (set to the cottage’s local timezone), and consider turning off event reminders/notifications (to avoid spamming yourself for these blocking events). The calendar should be maintained by you (the owner) and is read-only on the site (users cannot modify it).
+
+Privacy Note: Because the calendar is public, only free/busy info is shown. This protects any personal details. The site will not show the cottage’s exact address, just the general location (e.g. city or area), so embedding a Google Map is not necessary and could inadvertently reveal the address.
+
+Inquiry Form (Contact Form)
+
+Implement a simple inquiry form on the Contact page that emails you the details, using a form service rather than a custom backend. This avoids setting up a database or server. Key points for the form:
+
+Form Fields to Collect: Include fields for Name (of the person inquiring), Email (their contact email), Phone (their phone number – optional but good to have for friends/family), Desired Dates (when they want to stay – this could be two fields “Arrival” and “Departure” with type="date", or a single textarea for flexibility), and a Message text area for any additional information or questions. These fields cover the basics: who is inquiring, how to reach them, when they want to come, and any special requests.
+
+Formspree / Web3Forms Integration: Use a form backend service like Formspree or Web3Forms to handle the submission. These services will collect the form input and email it to your specified address, without you needing to run a server. For example, with Formspree, you sign up for a free account and get a form endpoint (an URL or form ID). You then set your form’s action to that endpoint and method to POST. Formspree will send form submissions to your email. It’s very quick to set up – Vercel even showcases Formspree as a simple solution
+reddit.com
+. Formspree also provides some built-in spam filtering and can send auto-response emails
+staticmania.com
+. Web3Forms is another great option: you get a free API key and use a POST action to https://api.web3forms.com/submit with your access key. It supports up to 250 submissions/month free and has no branding. (For Web3Forms, you include a hidden access_key field with your key in the form HTML
+web3forms.com
+web3forms.com
+.) Either service works well on static sites.
+
+Spam Protection: To minimize bot spam, implement a honeypot field. This is a hidden or dummy field that normal users won’t fill out, but bots often do. For example, add an <input type="text" name="city" (or checkbox as in Web3Forms) styled to be invisible. If that field comes back filled, you know it’s a bot and the form service can discard it. Many services like Web3Forms recommend this approach (e.g., a hidden checkbox field named “botcheck”)
+web3forms.com
+. You can also enable any built-in spam filtering the form service offers, or use a simple challenge question if needed, but a honeypot is seamless and should suffice for a low-volume private form.
+
+Form Submission Behavior: When the user submits the form, show a confirmation message (“Thank you, your inquiry has been sent. We will get back to you shortly.”). This can be done either by the form service’s redirect or via JavaScript. For simplicity, you can use the form’s target="_self" and have the service redirect to a thank-you page or include a <p> in the form that appears on success (Formspree’s React hook example shows rendering a thank-you state on success
+formspree.io
+). Since this site is for a small circle, a basic confirmation is fine – no need for complex multi-step flows.
+
+Email Delivery: Ensure the form service is configured to send to your preferred email. With Formspree, you’d verify your email during setup. With Web3Forms, you provide the email when creating the access key. Test the form in development to make sure the email is received. No database is used; inquiries go straight to email. (If desired, you can also have the form submissions CC an additional email or log to the service’s dashboard.)
+
+Implementation Note: As this is hosted on Vercel, using a client-side solution is ideal. Avoid building your own serverless function unless necessary. The above services don’t require any serverless code – just HTML/JS. In Next.js (App Router), you could even create a React component for the form and handle submission via fetch, but that’s optional. The simplest path: an HTML form that posts to the service URL. This keeps it minimal as requested.
+
+Fields like name, email, etc., should be marked required (required attribute) to ensure you get needed info. Use proper input types (type="email" for the email field to get basic validation, type="tel" for phone, etc.). All form inputs and labels should be clearly labeled and styled for usability. Include placeholder text or hints if needed (e.g. “Arrival date”, “Departure date”).
+
+Spam Tip: In addition to the honeypot, you might avoid putting your direct email on the site in plain text (to reduce spam harvesters). Use the form for initial contact. If you do list an email for contact, obfuscate it (like “name [at] domain.com”).
+
+Venmo Payment Link & QR Code
+
+For convenient payments (e.g. deposit or rental fee), provide a Venmo link and QR code on the site (perhaps on the Contact page or a dedicated “Payment” section). Here’s the approach:
+
+Venmo Profile Link: Determine the Venmo URL for your account. The standard format is https://venmo.com/<YourUsername> (you can also use venmo.com/code?user_id=... from the app share). This link will allow people on a mobile device to directly open your profile in the Venmo app and send payment. On the site, you might label a button or link as “Pay via Venmo” which opens this URL. For example, a button “Pay on Venmo” that links to your venmo.com/Username. If clicked on mobile, it should open the Venmo app if installed; on desktop, it will show a web page (not many will pay via desktop, so primarily this is for mobile users or for scanning the QR).
+
+Obtaining the QR Code: Venmo provides a personal QR code for each account. To get yours, open the Venmo app on your phone. Go to your profile (tap the menu or your picture). At the top of your profile screen, you will see a QR code icon or the code itself. Tap it to enlarge/share. Use the share option to save the QR code image to your device
+qr-code-generator.com
+qr-code-generator.com
+. (On some versions, tapping “Venmo Me” will display your QR code without your profile picture in the center – this is ideal for sharing.) This QR code encodes your Venmo link.
+
+Displaying the QR: Add the QR code image to your website (e.g., an <img> tag on the Contact or Payment section). Provide a caption or instruction like “Scan this QR code to pay via Venmo.” For clarity, you might also display your Venmo username near the code (e.g. “@YourVenmoName”) in case someone prefers to find you manually. The image should be of adequate size for scanning (at least ~150–200px in width on mobile view). You can hyperlink the image to your Venmo profile URL as well, so if a user clicks the QR image, it also tries to open the Venmo link.
+
+Testing: Before publishing, test the QR code by scanning it with a phone camera – it should correctly open your Venmo profile with the option to pay. Also test the text link on both mobile and desktop.
+
+Usage Guidance: Since this is a private rental, it’s good to add a note like “Only send payment after your booking is confirmed.” This prevents any friends from accidentally paying before you’ve agreed on details. You could mention that Venmo is used for deposit or rental fees among friends. If you want to pre-fill an amount or note, Venmo Business profiles allow QR codes for specific amounts
+help.venmo.com
+, but for personal use it’s usually open-ended. Likely, you’ll coordinate the amount separately and just have them use the link/QR to send it.
+
+Including the official Venmo QR code makes it very easy for your circle to pay, as they can simply scan instead of typing your username. Keep the QR image in a prominent yet secure spot on the site (probably not on the home page, but on Contact or perhaps a small mention on the Home). Since the site is public, there’s a small chance a random person could see the Venmo link; however, without a booking confirmation you wouldn’t accept random payments – the note about “friends and family only” and “confirm before paying” will cover this.
+
+Privacy & Safety Considerations
+
+Because this site is publicly accessible but intended only for friends and family, take the following precautions to maintain privacy and exclusivity:
+
+No Exact Address: Do not publish the cottage’s precise address on the website. Instead, provide a general description of the location (e.g. “Located in Traverse City, Michigan, near Long Lake”). You can mention approximate distance to landmarks (“10 minutes from downtown”) or general area details, but avoid street address or identifiable specifics. This protects your privacy and security. The exact address can be given privately to confirmed guests (just as platforms like Airbnb only share the address after booking
+community.withairbnb.com
+).
+
+“Friends and Family Only” Messaging: Clearly state on the site (e.g. in the FAQ or Home page intro) that this rental is intended for friends and family. For example: “This is our family’s private cottage which we share only with known guests.” By setting this expectation, any strangers who stumble upon the site realize bookings are by invitation. You can phrase it politely, such as “Rental is privately offered to friends and acquaintances – if you’re here by referral, welcome!” This wording will discourage random public inquiries.
+
+No Instant Booking: All bookings should go through the inquiry form and personal approval. Make it clear that submitting an inquiry does not automatically confirm a booking. You will respond personally to each inquiry to finalize details. This manual step acts as a gatekeeping measure (you can vet who is asking). It’s also a safety measure to ensure you know the person or the referrer. Because there’s no online calendar synchronization with third-party bookings, double-booking isn’t a big concern as you control the calendar manually.
+
+Limited Public Info: Apart from not sharing the address, consider limiting other sensitive info. For example, you might avoid posting an exact nightly rate on the public site if you prefer to discuss privately with friends (or you can list it in a password-protected FAQ if needed, but likely you can share pricing individually). However, basic rules and amenities should be listed so that friends know what to expect.
+
+Search Engine Visibility: If you truly want to keep the site low-profile, you can add a meta tag in the HTML to ask search engines not to index it. For instance: <meta name="robots" content="noindex">. This way, the site won’t appear in Google search results casually. Only people you share the link with will typically see it. This is optional but recommended since you don’t need random SEO traffic.
+
+Content Ownership & Security: Since the site will have photos and possibly family info, host it on your own domain and ensure SSL is enabled (Vercel will handle HTTPS automatically). All forms and embeds should load over HTTPS. Also, use discretion with photos (don’t show anything too private in the images that you wouldn’t want public).
+
+By implementing the above, the site will function as a friendly invitation portal rather than a public rental listing. Essentially, you’re creating a semi-private landing page: public on the web, but messaged and designed such that only your circle uses it. Keep an eye on inquiries – if you ever get one from an unknown person, you can politely explain the situation or simply decline.
+
+Deployment Checklist (Vercel)
+
+To get this site live and functioning, follow this deployment checklist:
+
+Code Setup: Build out the site using the preferred stack (Next.js with the App Router is recommended for ease of routing and deployment on Vercel). Ensure you have the pages (or route components) for each section above. Test it locally (e.g. npm run dev) and make sure all links, embeds, and the form work with test data.
+
+Domain Name: Choose and purchase a custom domain for the site (if you haven’t already). A simple, perhaps non-guessable domain is good (for example, <FamilyName>Cottage.com or similar). In Vercel, add this domain to your project. You will need to update your DNS records to point to Vercel. Typically, you add an A record for Vercel’s server or a CNAME to cname.vercel-dns.com as instructed by Vercel’s dashboard. Vercel will guide you through the domain setup – do this before going live so that the site is reachable at your domain.
+
+SSL Certificate: Once the domain is added to Vercel and DNS is configured, Vercel will automatically provision an SSL certificate (Let’s Encrypt) for HTTPS. Confirm in the Vercel dashboard that SSL is enabled and the site is accessible via https://yourdomain.com. This ensures all traffic (especially form submissions and the Venmo link page) is encrypted.
+
+Environment Variables: Determine if any sensitive keys or IDs need to be stored in env vars. For our setup, everything can be mostly public: the Google Calendar embed uses a public calendar ID (not secret), and Formspree/Web3Forms form IDs or access keys are okay to embed in client code (Web3Forms explicitly states the public key is not secret
+web3forms.com
+). If using Formspree’s Next.js integration, you might store the form ID in an environment variable like NEXT_PUBLIC_FORM_ID (the Vercel integration can do this for you)
+staticmania.com
+. In summary, no critical secrets are required for this project. If you were to use any API keys (for maps, or a custom email service), store them as environment variables in Vercel and never commit them to Git. In our case, just double-check if the form service requires any hidden key – if using Web3Forms, the access_key can be in the form HTML safely.
+
+Deployment to Vercel: You have a few options:
+
+The simplest is to push your code to a Git repository (GitHub, GitLab, etc.) and then import the project on Vercel. Vercel will auto-build and deploy on each push to the main branch. This gives you instant continuous deployment.
+
+Alternatively, use the Vercel CLI. Run vercel in the project directory and follow prompts to deploy. This can deploy the site without a repo (it will still connect to Vercel cloud).
+
+Ensure that in Vercel project settings, the build command (for Next.js) is the default (npm run build) and output is .vercel/output or as appropriate. For a static Next.js App Router site, just let it do its thing – Vercel is optimized for Next.js.
+
+Verify Functionality: After deploying, visit the live site. Check that all pages render correctly on the production URL. Specifically, confirm the Google Calendar embed loads (it might require the calendar to be public as mentioned), the inquiry form sends an email successfully (do a test submission on production and verify you receive it), and the Venmo link/QR works. It’s a good idea to test the form on production because sometimes services restrict domain or need CORS – e.g., if using Web3Forms, you might want to add your domain to allowed domains in its settings (they mention “Trusted Domains” feature for spam control on paid plans, but public key should work on any domain by default).
+
+SEO/Robots (optional): If you decided to hide from search engines, double-check that the robots.txt or meta tags are present. You can add a public/robots.txt in Next.js with User-agent: *\nDisallow: / to block all, or the <meta name="robots" content="noindex"> in the <Head> of your pages. Deploy those changes if needed.
+
+Monitoring & Updates: Since this is a small personal site, you likely won’t need fancy monitoring. But keep an eye on the Vercel usage (it should be well within free tier limits). If you make content changes, just update the code/pages and push – Vercel will redeploy. Google Calendar updates don’t require code changes, just maintain those events. Formspree/Web3Forms may have a limit (Formspree free tier ~50 submissions/month, Web3Forms free 250/month), which is probably plenty. If you approach the limit or need features like removing their badge (Formspree free adds a small badge), you might consider upgrading or switching to another solution.
+
+Vercel Publishing Flow Recap: In short – develop locally, push to Git (or use CLI), Vercel auto-builds, attach your domain, and you’re live. Don’t forget to set up the domain before sharing the link around to your family, to avoid confusion of a temporary URL. And always test after deployment for peace of mind.
+
+Example Layout Inspirations
+
+To visualize the end result, here are a couple of example sites with a similar “private rental landing page” concept that integrate an availability calendar and inquiry form:
+
+Beach Bungalow (Indialantic, FL) – This vacation rental’s website has a Reservations page that shows an availability calendar and a booking inquiry form on the same page
+firstbeach.com
+. It’s a simple layout: calendar on top, form below. This is a good reference for how you might structure your Availability page and Contact form together (though in our spec, we have them on separate pages, you could also combine if preferred). Their site demonstrates clear labeling of the sections (“Availability Calendar” and “Booking Inquiry Form”) which makes it easy for users.
+
+Casa Palmeras (Costa Rica) – Their Book Now page likewise includes an Availability Calendar embedded and a Booking/Inquiry Form in one place
+casapalmerascostarica.com
+. It’s mobile-friendly and straightforward. The calendar shows which dates are open, and right below it, there’s a form to send a booking request. This one also highlights that a direct booking site can be clean and focused when you’re only advertising a single property.
+
+These examples (which are live sites for individual rentals) illustrate the kind of clean design and functionality you’re aiming for. They keep things simple: plenty of photos, a calendar, a form, and supporting info (rules/FAQ) – exactly the components we’ve outlined. While you don’t need to copy their design, you can draw inspiration in terms of layout: for instance, a two-column layout on desktop for the home page (photo on one side, text on the other), or how the gallery is presented. Both examples also show that such sites can be visually appealing yet minimal, which is perfect for quick implementation.
+
+Lastly, remember to keep content concise on each page (as your audience will mostly be people who already have some context). The goal is a quick path to inquiry and information. By following this spec, a code assistant (like Cursor) should be able to generate the site with minimal friction, allowing you to start sharing your cottage with friends and family through your very own website. Enjoy your project, and happy hosting!
+
+Sources:
+
+Google Calendar embed settings – making a calendar public and showing free/busy info
+elfsight.com
+support.google.com
+
+Responsive Google Calendar embed technique (CSS wrapper for iframe)
+codepen.io
+codepen.io
+
+Formspree and static form handling (Next.js integration and spam protection)
+reddit.com
+staticmania.com
+
+Web3Forms usage example (HTML form fields and honeypot)
+web3forms.com
+web3forms.com
+
+Venmo QR code retrieval steps (from Venmo app)
+qr-code-generator.com
+qr-code-generator.com
+
+Example rental site with calendar + form (Beach Bungalow – Reservations)
+firstbeach.com
+
+Example rental site with calendar + form (Casa Palmeras – Book Now)
+casapalmerascostarica.com
