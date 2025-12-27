@@ -78,7 +78,7 @@ export default function Home() {
                 General Area
               </h3>
               <p className="text-gray-700 mb-4">
-                Located in [General Location Area]. Close to local attractions 
+                Located in Leelanau County on Lime Lake. Close to local attractions 
                 and amenities while maintaining privacy and tranquility.
               </p>
               <p className="text-sm text-gray-500 italic">

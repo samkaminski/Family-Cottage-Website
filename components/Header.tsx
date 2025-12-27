@@ -24,7 +24,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo/Brand */}
           <Link href="/" className="text-xl font-semibold text-gray-900">
-            Cottage Rental
+            Kaminski Cottage Rental
           </Link>
 
           {/* Desktop Navigation */}

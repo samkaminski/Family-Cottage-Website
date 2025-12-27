@@ -6,6 +6,10 @@ import Footer from '@/components/Footer'
 export const metadata: Metadata = {
   title: 'Cottage Rental',
   description: 'Private cottage rental for friends and family',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 export default function RootLayout({

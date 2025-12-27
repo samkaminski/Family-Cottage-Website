@@ -53,8 +53,8 @@ npm start
 ## Project Structure
 
 - `/app` - Next.js App Router pages and layouts
-- `/components` - Reusable React components (to be created)
-- `/public` - Static assets (images, etc.)
+- `/components` - Reusable React components (Header, Footer, ContactForm, CalendarEmbed)
+- `/public` - Static assets (images, robots.txt, etc.)
 
 ## Dependencies
 
@@ -217,14 +217,82 @@ The FAQ / Rules page (`app/faq/page.tsx`) provides information about the cottage
 
 **Note:** All content is currently placeholder text. The structure is in place with appropriate headings and sections, but actual FAQ content and house rules need to be filled in. No accordion or interactive features are implemented - the page is static and straightforward for easy maintenance.
 
+## Contact Page
+
+The Contact page (`app/contact/page.tsx`) provides an inquiry form for booking requests. It includes:
+
+- **Page Header:**
+  - "Contact & Inquiry" heading
+  - Brief explanation that this is an inquiry form, not instant booking
+
+- **Contact Form Component:**
+  - Form component (`components/ContactForm.tsx`) with required fields
+  - Integrated with Web3Forms for email delivery
+
+- **Form Fields:**
+  - **Name** (required) - Text input for full name
+  - **Email** (required) - Email input with HTML5 validation
+  - **Phone** (optional) - Tel input for contact number
+  - **Arrival Date** (required) - Date picker for arrival
+  - **Departure Date** (required) - Date picker for departure
+  - **Message** (required) - Textarea for additional information and questions
+
+- **Privacy Note:**
+  - Reminder that this is inquiry-only (not instant booking)
+  - Note that exact address will be provided after confirmation
+
+**Form Service Integration:**
+- Uses **Web3Forms** for form submission and email delivery
+- Form submissions are sent to Web3Forms API which emails the site owner
+- Includes honeypot spam protection (hidden checkbox field)
+- Success and error states with user feedback
+- Form resets on successful submission
+
+**Setup Requirements:**
+1. Sign up for a free account at https://web3forms.com
+2. Get your access key from the Web3Forms dashboard
+3. Add environment variable: `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY=your_access_key_here`
+4. Configure your email address in Web3Forms settings to receive submissions
+5. Test the form with a test submission
+
+**Environment Variable:**
+- `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` - Your Web3Forms access key (required for form submissions)
+
+**Note:** The form currently uses a placeholder access key. You must set the `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` environment variable with your actual Web3Forms access key for the form to work. The form includes basic spam protection via a honeypot field.
+
+## Privacy & Safeguards
+
+The site includes several privacy safeguards to protect the cottage location and maintain a low profile:
+
+### Search Engine Indexing Prevention
+
+- **Robots Meta Tag:** Added to the root layout (`app/layout.tsx`) with `index: false` and `follow: false` to prevent search engines from indexing pages
+- **robots.txt:** Located at `public/robots.txt`, this file disallows all crawling by search engines with `User-agent: *` and `Disallow: /`
+
+These measures ensure the site won't appear in search engine results, keeping it accessible only to those who have the direct link.
+
+### Address Privacy Policy
+
+**Important:** The exact cottage address must NEVER appear anywhere on the website. Only general location information should be used.
+
+**Location Placeholders Currently Used:**
+- **Home Page** (`app/page.tsx`): "Amenities & Location" section contains `[General Location Area]` placeholder
+- **Footer Component** (`components/Footer.tsx`): Contains `[General Location Area]` placeholder
+
+**Address Privacy Rules:**
+- Only use general area descriptions (e.g., "Located in [City/Region Name]" or "near [Landmark]")
+- Never include street addresses, house numbers, or specific location details
+- The exact address should only be shared privately via email or direct communication after booking confirmation
+- This protects privacy and security while still providing enough information for interested guests
+
+When filling in content, always replace location placeholders with general descriptions only, never with the actual street address.
+
 ## Next Steps
 
-- Contact form page
-- Form integration (Formspree/Web3Forms)
-- Venmo link and QR code implementation
 - Image integration (replace placeholders with actual images)
 - Lightbox functionality for gallery
 - Google Calendar ID configuration
 - Content filling (FAQ text, house rules, etc.)
+- Environment variables setup (Web3Forms access key)
 - Deployment configuration
 

@@ -5,25 +5,25 @@ export default function Footer() {
         <div className="text-center space-y-4">
           {/* Friends and Family Note */}
           <p className="text-gray-600 text-sm">
-            This is a private rental for friends and family only.
+            This is a private rental.
           </p>
 
           {/* General Location */}
           <p className="text-gray-600 text-sm">
-            Located in [General Location Area]
+            Located in Leelanau County on Lime Lake
           </p>
 
           {/* Venmo Payment Placeholder */}
           <div className="pt-4 border-t border-gray-200">
             <p className="text-gray-600 text-sm mb-2">Payment via Venmo</p>
             <p className="text-gray-500 text-xs italic">
-              Venmo link and QR code coming soon
+            Venmo payment details will be provided after booking is confirmed
             </p>
           </div>
 
           {/* Copyright */}
           <p className="text-gray-500 text-xs mt-6">
-            © {new Date().getFullYear()} Cottage Rental
+            © {new Date().getFullYear()} Kaminski Cottage Rental
           </p>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function FAQ() {
                 Is this a private rental?
               </h3>
               <p className="text-gray-700">
-                Yes, this is a private cottage rental for friends and family only. 
+                Yes, this is a private cottage rental for friends and family. 
                 Bookings are by invitation and require confirmation.
               </p>
             </div>
@@ -119,7 +119,7 @@ export default function FAQ() {
                 Payment
               </h3>
               <p className="text-gray-700">
-                [Payment information placeholder]
+              Venmo payment details will be provided after booking is confirmed.
               </p>
             </div>
           </div>
